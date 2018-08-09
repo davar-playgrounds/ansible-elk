@@ -1,0 +1,8 @@
+# main playbook: site.yml
+---
+
+- import_playbook: playbook-cent.yml
+
+- import_playbook: playbook-fed.yml
+
+- import_playbook: playbook-ubun.yml

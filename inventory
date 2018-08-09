@@ -1,0 +1,26 @@
+# test inventory
+
+[webservers]
+web1 ansible_host=192.168.10.101
+web2 ansible_host=192.168.10.102
+web3 ansible_host=192.168.10.103
+
+[webservers:vars]
+# Variables for the web server configuration
+httpd_port=80
+
+[logstash]
+logstash1 ansible_host=192.168.10.100
+
+[logstash:vars]
+# Variables for the logstash
+
+
+# Group 'all' with all servers
+[all:children]
+webservers
+logstash
+
+[all:vars]
+ansible_ssh_user=vagrant
+ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key

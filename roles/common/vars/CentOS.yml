@@ -1,0 +1,8 @@
+# vars for Centos
+---
+
+CentOS_packages:
+  - epel-release
+  - iproute
+
+ntp_host: 0.centos.pool.ntp.org

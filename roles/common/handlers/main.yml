@@ -1,0 +1,5 @@
+---
+# handlers file for common
+
+- name: restart_ntp_service
+  service: name="{{ ntp_service }}" state=restarted

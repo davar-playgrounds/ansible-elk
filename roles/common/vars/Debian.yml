@@ -1,0 +1,9 @@
+# vars for Debian
+---
+
+Debian_packages: 
+  - ntpdate
+
+ntp_service: ntp
+
+ntp_host: 0.debian.pool.ntp.org
