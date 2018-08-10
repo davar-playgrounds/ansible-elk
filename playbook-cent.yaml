@@ -119,7 +119,8 @@
     # so copy the key file with curl and install it locally
     - name: import ELK key
       command: curl https://artifacts.elastic.co/GPG-KEY-elasticsearch -o GPG-KEY-elasticsearch
-      warn: no
+      args:
+        warn: false
       creates: GPG-KEY-elasticsearch
       register: elk_key
     # - name: verify download
@@ -128,7 +129,7 @@
     # - debug: var=elk_key
     - name: import ELK key
       rpm_key: key=GPG-KEY-elasticsearch
-      when: elk_key.failed == "false"
+      when: elk_key.failed == false
    
 
     # - name: registering elk repo key 
@@ -180,6 +181,18 @@
     #   command: tail -20 /etc/logstash/logstash.cfg
     #   register: results
     # - debug: var=results.stdout_lines
+    - name: configure logstash.yml
+      blockinfile:
+        path: /etc/logstash/logstash.yml
+        backup: yes      
+        marker: "# -- {mark} ANSIBLE MANAGED BLOCK --"
+        content: |
+          slowlog.threshold.warn: 2s
+          slowlog.threshold.info: 1s
+          slowlog.threshold.debug: 500ms
+          slowlog.threshold.trace: 100ms
+      notify:
+        - restart logstash
 
     - name: enable and run logstash
       service: name=logstash state=started enabled=yes

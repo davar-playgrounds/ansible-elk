@@ -17,7 +17,6 @@ Vagrant.configure(2) do | config |
 	    config.proxy.https    = "https://www-proxy.us.oracle.com:80"
 	    config.proxy.no_proxy = "localhost,127.0.0.1,.local"
 	end
-	config.ssh.insert_key = false
 	config.vm.synced_folder '.', '/vagrant', disabled: false
 	config.vm.provider :virtualbox do |vb|
 		#vb.gui = true
@@ -45,6 +44,7 @@ Vagrant.configure(2) do | config |
 	config.vm.define "web1" do | web1 | 
 		web1.vm.network 'private_network', ip: '192.168.10.101'
 		web1.vm.hostname = 'web1'
+		web1.ssh.insert_key = false
 		# web1.vm.provision "shell", inline: <<-SHELL1
 		# SHELL1
 	end
@@ -52,6 +52,7 @@ Vagrant.configure(2) do | config |
 	config.vm.define "web2" do | web2 |
 		web2.vm.network 'private_network', ip: '192.168.10.102'
 		web2.vm.hostname = 'web2'
+		web2.ssh.insert_key = false
 		# web2.vm.provision "shell", inline: <<-SHELL2
 		# SHELL2
 	end
@@ -59,6 +60,7 @@ Vagrant.configure(2) do | config |
 	config.vm.define "web3" do | web3 |
 		web3.vm.network 'private_network', ip: '192.168.10.103'
 		web3.vm.hostname = 'web3'
+		web3.ssh.insert_key = false
 		# web3.vm.provision "shell", inline: <<-SHELL3
 		# SHELL3
 	end
@@ -66,6 +68,7 @@ Vagrant.configure(2) do | config |
 	config.vm.define "logstash1", primary: true do | logstash1 |
 		logstash1.vm.network 'private_network', ip: '192.168.10.100'
 		logstash1.vm.hostname = 'logstash1'
+		logstash1.ssh.insert_key = false
 		# logstash1.vm.network 'forwarded_port', guest: 80, host: 8080
 		# logstash1.vm.provision "shell", inline: <<-SERVER
 		# SERVER
