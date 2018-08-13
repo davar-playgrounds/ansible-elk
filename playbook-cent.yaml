@@ -117,11 +117,12 @@
 
     # rpm_key and get_url fails if using proxies as ansible only works with http proxies
     # so copy the key file with curl and install it locally
+    # also command gives warning for "creates", so use "shell" module
     - name: import ELK key
-      command: curl https://artifacts.elastic.co/GPG-KEY-elasticsearch -o GPG-KEY-elasticsearch
+      shell: curl https://artifacts.elastic.co/GPG-KEY-elasticsearch -o GPG-KEY-elasticsearch
       args:
         warn: false
-      creates: GPG-KEY-elasticsearch
+        creates: GPG-KEY-elasticsearch
       register: elk_key
     # - name: verify download
     #   file: path=GPG-KEY-elasticsearch
@@ -138,7 +139,7 @@
     #     state: present
 
     - name: Install logstash packages (this may take a while)
-      package: name={{ item }} state=present update_cache=yes
+      package: name={{ item }} state=present
       with_items:
         - java-1.8.0-openjdk
         - logstash 
