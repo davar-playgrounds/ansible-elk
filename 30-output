@@ -1,0 +1,12 @@
+output {
+  if 'nondefault' not in [tags] {
+    elasticsearch {
+    hosts => ["http://es.uspp1.oraclecloud.com:80"]
+      ssl_certificate_verification => false
+      index => "paas-storaas-uspp1-%{+YYYY.MM.dd}"
+      flush_size => 100
+      timeout => 124
+    }
+
+  }
+}

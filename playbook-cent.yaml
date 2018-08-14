@@ -143,45 +143,33 @@
       with_items:
         - java-1.8.0-openjdk
         - logstash 
-        - filebeat 
-        - packetbeat
-        - metricbeat
+        # - filebeat 
+        # - packetbeat
+        # - metricbeat
 
-    # - name: replace rsyslog
-    #   copy:
-    #     src: rsyslog.conf
-    #     dest: /etc/rsyslog.conf
-    #     backup: yes
-    #     owner: root
-    #     group: root
-    #     mode: 0644
-
-    # - name: create logstash logs
-    #   copy:
-    #     dest: /etc/rsyslog.d/logstash.conf
-    #     content: |
-    #       local2.=info     /var/log/logstash-access.log    #For Access Log
-    #       local2.notice    /var/log/logstash-info.log      #For Service Info - Backend, loadbalancer
-    #     owner: root
-    #     group: root
-    #     mode: 0644
-    #   notify:
-    #     - restart syslog
-
-    # - name: configure logstash w/ template
-    #   template: 
-    #     # check_mode: yes  # yes=dry-run
-    #     src: logstash.cfg.j2
-    #     dest: /etc/logstash/logstash.cfg
-    #     validate: /sbin/logstash -f %s -c
-    #     backup: yes
-    #   notify:
-    #     - restart logstash
-
-    # - name: tail logstash.cfg
-    #   command: tail -20 /etc/logstash/logstash.cfg
-    #   register: results
-    # - debug: var=results.stdout_lines
+    - name: logstash config files
+      copy: src={{ item.src }} dest=/etc/logstash/conf.d/
+      with_items:
+        - { src: '10-messages.conf' }
+        - { src: '10-staas-commit.conf' }
+        - { src: '10-staas-galaxy.conf' }
+        - { src: '10-staas-gc.conf' }
+        - { src: '10-staas-hardware.conf' }
+        - { src: '10-staas-heartbeat.conf' }
+        - { src: '10-staas-mds.conf' }
+        - { src: '10-staas-metering.conf' }
+        - { src: '10-staas-reaper.conf' }
+        - { src: '10-staas-replication.conf' }
+        - { src: '10-staas-replicationAudit.conf' }
+        - { src: '10-staas-stats.conf' }
+        - { src: '10-staas-swift.conf' }
+        - { src: '10-staas-telemetry.conf' }
+        - { src: '10-staas-universe.conf' }
+        - { src: '10-syslog.conf' }
+        - { src: '30-output' }
+      notify:
+        - restart logstash
+ 
     - name: configure logstash.yml
       blockinfile:
         path: /etc/logstash/logstash.yml
