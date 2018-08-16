@@ -9,11 +9,11 @@ httpd_port=80
 
 
 
-[elastic]
+[elasticsearch]
 elastic1 ansible_host=192.168.10.201
 elastic2 ansible_host=192.168.10.202
 
-[kibana:vars]
+[elasticsearch:vars]
 # Variables for elastic search cluster configuration
 
 
@@ -28,7 +28,7 @@ logstash1 ansible_host=192.168.10.100
 # Group 'all' with all servers
 [all:children]
 kibana
-elastic
+elasticsearch
 logstash
 
 [all:vars]

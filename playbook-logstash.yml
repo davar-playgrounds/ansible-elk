@@ -20,11 +20,11 @@
     - debug: var=ansible_eth.1.ipv4.address
     - debug: var=ansible_host
 
-- hosts: kibana
+- hosts: elasticsearch
   become: true
   tasks:
 
   roles:
     - java
     - repo-elk
-    - kibana
+    - elasticsearch

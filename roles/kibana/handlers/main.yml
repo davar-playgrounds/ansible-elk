@@ -1,0 +1,4 @@
+# kibana handlers
+
+- name: restart_kibana_service
+  service: name=kibana state=restarted

@@ -1,13 +1,13 @@
 ---
 # tasks to setup elasticsearch
 
-# requires java as prerequisite
-# set CentOS repository and key
-# install package
-# config files
-# start service
+# requires Java 8 + elk-repo first installed first
+- name: install elasticsearch
+  package:
+    name: elasticsearch
+    state: present
 
+# put stuff in here to configure servie
 
-handlers:
-- name: restart_elastic_service
-  service: name=elasticsearch state=restarted
+- name: enable and run elasticsearch
+  service: name=elasticsearch state=started enabled=yes

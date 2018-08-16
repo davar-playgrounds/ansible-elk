@@ -1,0 +1,29 @@
+---
+# tasks to setup elk's repo
+
+- name: checking if ELK repo is already configured...
+  stat: path={{ elk_repo_path }}
+  register: elk_repofile_result
+# - debug: var=elk_repofile_result
+
+# rpm_key and get_url fails if using proxies as ansible only works with http proxies
+# so copy the key file with curl and install it locally
+# also command gives warning for "creates", so use "shell" module
+- name: Install ELK repo
+  copy:
+    src: elastic.repo
+    dest: "{{ elk_repo_path }}"
+    owner: root
+    group: root
+    mode: 0644
+  when: not elk_repofile_result.stat.exists
+- name: get ELK key
+  shell: curl {{ elk_key_url }} -o GPG-KEY-elasticsearch
+  args:
+    warn: false
+    creates: GPG-KEY-elasticsearch
+  register: elk_key
+- debug: var=elk_key
+- name: register ELK key
+  rpm_key: key=GPG-KEY-elasticsearch
+  when: not elk_key.failed

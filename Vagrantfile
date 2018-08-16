@@ -57,26 +57,40 @@ Vagrant.configure(2) do | config |
 	config.vm.define "elastic1" do | elastic1 |
 		elastic1.vm.network 'private_network', ip: '192.168.10.201'
 		elastic1.vm.hostname = 'elastic1'
-		# elastic1.ssh.insert_key = false
-		# elastic1.vm.provision "shell", inline: <<-SHELL2
-		# SHELL2
+		elastic1.ssh.insert_key = false
+		elastic1.vm.provision "ansible" do |ansible| 
+	        ansible.compatibility_mode = "2.0"
+	        ansible.inventory_path = "./inventory"
+	        ansible.playbook = "playbook-elasticsearch.yml"
+	        # ansible.verbose = "v"
+	        # ansible.raw_arguments = [""]
+		end
 	end
 
 	config.vm.define "elastic2" do | elastic2 |
 		elastic2.vm.network 'private_network', ip: '192.168.10.202'
 		elastic2.vm.hostname = 'elastic2'
-		# elastic2.ssh.insert_key = false
-		# elastic2.vm.provision "shell", inline: <<-SHELL3
-		# SHELL3
+		elastic2.ssh.insert_key = false
+		elastic2.vm.provision "ansible" do |ansible| 
+	        ansible.compatibility_mode = "2.0"
+	        ansible.inventory_path = "./inventory"
+	        ansible.playbook = "playbook-elasticsearch.yml"
+	        # ansible.verbose = "v"
+	        # ansible.raw_arguments = [""]
+		end
 	end
 
-	config.vm.define "logstash1", primary: true do | logstash1 |
+	config.vm.define "logstash1" do | logstash1 |
 		logstash1.vm.network 'private_network', ip: '192.168.10.100'
 		logstash1.vm.hostname = 'logstash1'
-		# logstash1.ssh.insert_key = false
-		# logstash1.vm.network 'forwarded_port', guest: 80, host: 8080
-		# logstash1.vm.provision "shell", inline: <<-SERVER
-		# SERVER
+		logstash1.ssh.insert_key = false
+		logstash1.vm.provision "ansible" do |ansible| 
+	        ansible.compatibility_mode = "2.0"
+	        ansible.inventory_path = "./inventory"
+	        ansible.playbook = "playbook-logstash.yml"
+	        # ansible.verbose = "v"
+	        # ansible.raw_arguments = [""]
+		end
 	end
 
 end
