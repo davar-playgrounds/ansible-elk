@@ -7,7 +7,12 @@
     name: kibana
     state: present
 
-# put stuff in here to configure servie
+# default is to limit access to localhost connections only
+- name: Updating kibana config file
+  lineinfile:
+    destfile: /etc/kibana/kibana.yml
+    regexp: 'server.host:'
+    line: "server.host: {{ kibana_server_host }}"
 
 - name: enable and run kibana
   service: name=kibana state=started enabled=yes

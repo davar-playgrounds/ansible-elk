@@ -1,0 +1,5 @@
+# group_vars for kibana group
+---
+group_vars: "kibana"
+
+# kibana_server_host: ""
