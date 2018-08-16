@@ -1,12 +1,47 @@
 ---
 # tasks file for logstash
 
-# set CentOS repository and key
-# install package
-# config files
-# start service
+# requires Java 8 + elk-repo first installed first
+- name: install logstash
+  package:
+    name: logstash
+    state: present
 
+- name: logstash config files
+  copy: src={{ item.src }} dest=/etc/logstash/conf.d/
+  with_items:
+    - { src: '10-messages.conf' }
+    - { src: '10-staas-commit.conf' }
+    - { src: '10-staas-galaxy.conf' }
+    - { src: '10-staas-gc.conf' }
+    - { src: '10-staas-hardware.conf' }
+    - { src: '10-staas-heartbeat.conf' }
+    - { src: '10-staas-mds.conf' }
+    - { src: '10-staas-metering.conf' }
+    - { src: '10-staas-reaper.conf' }
+    - { src: '10-staas-replication.conf' }
+    - { src: '10-staas-replicationAudit.conf' }
+    - { src: '10-staas-stats.conf' }
+    - { src: '10-staas-swift.conf' }
+    - { src: '10-staas-telemetry.conf' }
+    - { src: '10-staas-universe.conf' }
+    - { src: '10-syslog.conf' }
+    - { src: '30-output' }
+  notify:
+    - restart_logstash_service
 
-handlers:
-- name: restart_logstash_service
-  service: name=logstash state=restarted
+- name: configure logstash.yml
+  blockinfile:
+    path: /etc/logstash/logstash.yml
+    backup: yes      
+    marker: "# -- {mark} ANSIBLE MANAGED BLOCK --"
+    content: |
+      slowlog.threshold.warn: 2s
+      slowlog.threshold.info: 1s
+      slowlog.threshold.debug: 500ms
+      slowlog.threshold.trace: 100ms
+  notify:
+    - restart_logstash_service
+
+- name: enable and run logstash
+  service: name=logstash state=started enabled=yes

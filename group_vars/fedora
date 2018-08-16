@@ -1,3 +1,0 @@
-# group_vars for fedora group
----
-group_vars: "fedora"

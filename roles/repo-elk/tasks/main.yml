@@ -23,7 +23,7 @@
     warn: false
     creates: GPG-KEY-elasticsearch
   register: elk_key
-- debug: var=elk_key
+# - debug: var=elk_key
 - name: register ELK key
   rpm_key: key=GPG-KEY-elasticsearch
   when: not elk_key.failed

@@ -1,24 +1,5 @@
-# Install kibana on CentOS 6+7
+# Install elasticsearch on CentOS 6+7
 ---
-
-- hosts: all
-  become: true
-  # check_mode: yes  # yes=dry-run
-
-  roles:
-    # - common
-    - repo-epel
-
-  pre_tasks:
-
-    - name: define traditional ethernet facts in CentOS7
-      set_fact:
-        ansible_eth: "{% set ansible_eth = ansible_eth|default([]) + [hostvars[inventory_hostname]['ansible_' + item]] %}{{ ansible_eth|list }}"
-      when: hostvars[inventory_hostname]['ansible_' + item]['type'] == 'ether'
-      with_items:
-      - "{{ hostvars[inventory_hostname]['ansible_interfaces'] }}"
-    - debug: var=ansible_eth.1.ipv4.address
-    - debug: var=ansible_host
 
 - hosts: elasticsearch
   become: true

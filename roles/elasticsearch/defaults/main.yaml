@@ -1,1 +1,3 @@
 # defaults file for elastic search
+
+elasticsearch_network_host: "localhost"
