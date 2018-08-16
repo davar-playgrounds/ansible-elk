@@ -1,6 +1,11 @@
 ---
 # tasks to setup kibana
 
+- include_role:
+    name: java
+- include_role: 
+    name: repo-elk
+
 # requires Java 8 + elk-repo first installed first
 - name: install kibana
   package:
