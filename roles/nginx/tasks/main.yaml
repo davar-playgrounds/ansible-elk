@@ -1,12 +1,18 @@
 ---
 # tasks to setup nginx
 
-# reuires epel repo for CentOS
-# install package
-# config files
-# start service
+# requires ius-repo first installed first
+- name: install nginx
+  package:
+    name: nginx
+    state: present
+
+- name: Create nginx directory structure
+  file:
+    path: /etc/nginx/conf.d/
+    state: directory
+    mode: 0755
 
 
-handlers:
-- name: restart_nginx_service
-  service: name=nginx state=restarted
+- name: enable and run nginx
+  service: name=nginx state=started enabled=yes

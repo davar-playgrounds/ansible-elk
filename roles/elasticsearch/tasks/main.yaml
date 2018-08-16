@@ -1,7 +1,11 @@
 ---
 # tasks to setup elasticsearch
 
-# requires Java 8 + elk-repo first installed first
+- include_role:
+    name: java
+- include_role: 
+    name: repo-elk
+
 - name: install elasticsearch
   package:
     name: elasticsearch
