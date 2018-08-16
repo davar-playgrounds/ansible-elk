@@ -1,18 +1,21 @@
 ---
 # tasks to setup nginx
 
+- include_role: 
+    name: repo-epel
+
 # requires ius-repo first installed first
 - name: install nginx
   package:
     name: nginx
     state: present
 
+# this should be there from package default install
 - name: Create nginx directory structure
   file:
     path: /etc/nginx/conf.d/
     state: directory
     mode: 0755
-
 
 - name: enable and run nginx
   service: name=nginx state=started enabled=yes
