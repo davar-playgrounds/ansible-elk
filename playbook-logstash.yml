@@ -6,6 +6,4 @@
   tasks:
 
   roles:
-    - java
-    - repo-elk
     - logstash
