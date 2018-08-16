@@ -33,42 +33,47 @@ Vagrant.configure(2) do | config |
 |
 
 	# run ansible playbook on all nodes...node-specific stuff is in the playbook
-	config.vm.provision "ansible" do |ansible|
-		ansible.compatibility_mode = "2.0"
-		ansible.playbook = "playbook-cent.yaml"
-		ansible.inventory_path = "./inventory"
+	# config.vm.provision "ansible" do |ansible|
+		# ansible.compatibility_mode = "2.0"
+		# ansible.playbook = "playbook-cent.yml"
+		# ansible.inventory_path = "./inventory"
 		# ansible.verbose = "v"
 		# ansible.raw_arguments = [""]
+	# end
+
+	config.vm.define "kibana1" do | kibana1 | 
+		kibana1.vm.network 'private_network', ip: '192.168.10.101'
+		kibana1.vm.hostname = 'kibana1'
+		kibana1.ssh.insert_key = false
+		kibana1.vm.provision "ansible" do |ansible| 
+	        ansible.compatibility_mode = "2.0"
+	        ansible.inventory_path = "./inventory"
+	        ansible.playbook = "playbook-kibana.yml"
+	        # ansible.verbose = "v"
+	        # ansible.raw_arguments = [""]
+		end
 	end
 
-	config.vm.define "web1" do | web1 | 
-		web1.vm.network 'private_network', ip: '192.168.10.101'
-		web1.vm.hostname = 'web1'
-		web1.ssh.insert_key = false
-		# web1.vm.provision "shell", inline: <<-SHELL1
-		# SHELL1
-	end
-
-	config.vm.define "web2" do | web2 |
-		web2.vm.network 'private_network', ip: '192.168.10.102'
-		web2.vm.hostname = 'web2'
-		web2.ssh.insert_key = false
-		# web2.vm.provision "shell", inline: <<-SHELL2
+	config.vm.define "elastic1" do | elastic1 |
+		elastic1.vm.network 'private_network', ip: '192.168.10.201'
+		elastic1.vm.hostname = 'elastic1'
+		# elastic1.ssh.insert_key = false
+		# elastic1.vm.provision "shell", inline: <<-SHELL2
 		# SHELL2
 	end
 
-	config.vm.define "web3" do | web3 |
-		web3.vm.network 'private_network', ip: '192.168.10.103'
-		web3.vm.hostname = 'web3'
-		web3.ssh.insert_key = false
-		# web3.vm.provision "shell", inline: <<-SHELL3
+	config.vm.define "elastic2" do | elastic2 |
+		elastic2.vm.network 'private_network', ip: '192.168.10.202'
+		elastic2.vm.hostname = 'elastic2'
+		# elastic2.ssh.insert_key = false
+		# elastic2.vm.provision "shell", inline: <<-SHELL3
 		# SHELL3
 	end
 
 	config.vm.define "logstash1", primary: true do | logstash1 |
 		logstash1.vm.network 'private_network', ip: '192.168.10.100'
 		logstash1.vm.hostname = 'logstash1'
-		logstash1.ssh.insert_key = false
+		# logstash1.ssh.insert_key = false
 		# logstash1.vm.network 'forwarded_port', guest: 80, host: 8080
 		# logstash1.vm.provision "shell", inline: <<-SERVER
 		# SERVER

@@ -1,0 +1,12 @@
+---
+# tasks file for logstash
+
+# set CentOS repository and key
+# install package
+# config files
+# start service
+
+
+handlers:
+- name: restart_logstash_service
+  service: name=logstash state=restarted

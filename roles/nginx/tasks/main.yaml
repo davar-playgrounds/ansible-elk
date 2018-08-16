@@ -1,0 +1,12 @@
+---
+# tasks to setup nginx
+
+# reuires epel repo for CentOS
+# install package
+# config files
+# start service
+
+
+handlers:
+- name: restart_nginx_service
+  service: name=nginx state=restarted

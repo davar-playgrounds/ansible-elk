@@ -1,0 +1,13 @@
+---
+# tasks to setup elasticsearch
+
+# requires java as prerequisite
+# set CentOS repository and key
+# install package
+# config files
+# start service
+
+
+handlers:
+- name: restart_elastic_service
+  service: name=elasticsearch state=restarted

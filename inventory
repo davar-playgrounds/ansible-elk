@@ -1,13 +1,22 @@
 # test inventory
 
-[webservers]
-web1 ansible_host=192.168.10.101
-web2 ansible_host=192.168.10.102
-web3 ansible_host=192.168.10.103
+[kibana]
+kibana1 ansible_host=192.168.10.101
 
-[webservers:vars]
-# Variables for the web server configuration
+[kibana:vars]
+# Variables for the kibana data visualizer configuration
 httpd_port=80
+
+
+
+[elastic]
+elastic1 ansible_host=192.168.10.201
+elastic2 ansible_host=192.168.10.202
+
+[kibana:vars]
+# Variables for elastic search cluster configuration
+
+
 
 [logstash]
 logstash1 ansible_host=192.168.10.100
@@ -18,7 +27,8 @@ logstash1 ansible_host=192.168.10.100
 
 # Group 'all' with all servers
 [all:children]
-webservers
+kibana
+elastic
 logstash
 
 [all:vars]
