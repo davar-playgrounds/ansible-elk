@@ -1,1 +1,3 @@
 # defaults file for logstash
+
+logstash_openssl_cnf: "/etc/pki/tls/openssl.cnf"

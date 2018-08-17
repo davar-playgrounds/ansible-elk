@@ -7,7 +7,7 @@
 
 # must use include because doesn't like dynamic content and won't look right path
 # this is ugly because import_task doesn't look in the right place until 2.7
-- include_tasks: roles/repo-elk/tasks/Debian_tasks.yml
+- include_tasks: roles/repo-elk/tasks/Debian-tasks.yml
   when: ansible_os_family == "Debian"
 
 - include_tasks: roles/repo-elk/tasks/RedHat-tasks.yml

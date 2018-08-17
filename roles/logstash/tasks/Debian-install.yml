@@ -1,0 +1,16 @@
+# this is a kludge to install this package on debian systems
+# until Elastic.co fixes their debian install repo. It currently
+# lacks a Release file and installing their repo breaks apt-get install
+# so...this workaround 201808.17MeV
+
+- name: getting logstash's deb file
+  shell: wget -q https://artifacts.elastic.co/downloads/logstash/logstash-6.3.2.deb
+    creates: logstash-6.3.2.deb
+  register: logstash_wget_result
+- debug: var=logstash_wget_result
+
+- name: installing deb file
+  apt:
+    deb: ./logstash-6.3.2.deb
+    state: present
+  when: logstash_wget_result.rc == 0

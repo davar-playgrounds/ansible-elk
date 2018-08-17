@@ -7,10 +7,13 @@
     name: repo-elk
 
 # requires Java 8 + elk-repo first installed first
+# kludge to install on debian systems
+- include_tasks: roles/logstash/tasks/Debian-install.yml
+  when: ansible_os_family == "Debian"
+
 - name: install logstash
-  package:
-    name: logstash
-    state: present
+  package: name=logstash state=present
+  when: ansible_os_family == "RedHat"
 
 - name: logstash config files
   copy: src={{ item.src }} dest=/etc/logstash/conf.d/

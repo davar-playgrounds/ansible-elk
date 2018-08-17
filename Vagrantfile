@@ -11,6 +11,7 @@ Vagrant.configure(2) do | config |
 
 	# config.vm.box = 'ubuntu1804'
 	config.vm.box = 'centos7'
+	config.ssh.insert_key = false
 	# config.vm.network 'forwarded_port', guest: 80, host: 8080
 	if Vagrant.has_plugin?("vagrant-proxyconf")
 	    config.proxy.http     = "http://www-proxy.us.oracle.com:80"
@@ -73,10 +74,13 @@ Vagrant.configure(2) do | config |
 	end
 
 	config.vm.define "logstash1" do | logstash1 |
-		logstash1.vm.box = 'ubuntu1804'
+		logstash1.vm.box = 'geerlingguy/ubuntu1804'
 		logstash1.vm.network 'private_network', ip: '192.168.10.100'
 		logstash1.vm.hostname = 'logstash1'
 		logstash1.ssh.insert_key = false
+# 		logstash1.vm.provision "shell", inline: %q|
+# 			apt-get update -y
+#|
 		logstash1.vm.provision "ansible" do |ansible| 
 	        ansible.compatibility_mode = "2.0"
 	        ansible.inventory_path = "./inventory"

@@ -1,0 +1,6 @@
+# RedHat tasks to install OpenJava
+
+- name: Install java 8
+  package:
+    name: java-1.8.0-openjdk
+    state: present

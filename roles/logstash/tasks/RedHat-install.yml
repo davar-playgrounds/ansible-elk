@@ -1,0 +1,7 @@
+# this is a kludge to install this package on debian systems
+# not needed for RedHat systems 201808.17MeV
+
+- name: install logstash
+  package:
+    name: logstash
+    state: present

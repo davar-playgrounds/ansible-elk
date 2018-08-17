@@ -1,7 +1,24 @@
 ---
 # java tasks
 
+# note: the following included tasks might configure and enable stuff in common_packages
+# requires 
+#   Debian_{tasks,services}.yml
+#   RedHat_{tasks,services}.yml
+
+# must use include because doesn't like dynamic content and won't look right path
+# this is ugly because import_task doesn't look in the right place until 2.7
+
+
+- name: Install java 8
+  apt:
+    name: openjdk-8-jdk
+    state: present
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+
 - name: Install java 8
   package:
     name: java-1.8.0-openjdk
     state: present
+  when: ansible_os_family == "RedHat"
