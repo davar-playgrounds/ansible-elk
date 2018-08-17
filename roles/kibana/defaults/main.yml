@@ -1,3 +1,15 @@
 # defaults file for kibana
 
 kibana_server_host: localhost
+
+nginx_kibana_port: 80
+# Nginx SSL listening port
+elk_server_ssl_cert_port: 8080
+
+# The web authentication credentials to gain access to Kibana
+kibana_user: admin
+kibana_password: admin
+kibana_port: 5601
+
+# The system user that Nginx will use
+nginx_user: www-data

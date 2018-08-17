@@ -7,17 +7,70 @@
     name: repo-elk
 
 # requires Java 8 + elk-repo first installed first
-- name: install kibana
+- name: install kibana (this may take a moment)
   package:
     name: kibana
     state: present
 
+# install pip and pexect for python (don't use package manager)
+- easy_install:
+    name: pip
+    state: latest
+- pip: 
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - certifi
+    - pexpect
+
 # default is to limit access to localhost connections only
-- name: Updating kibana config file
+- name: updating kibana config file (limit to localhost)
   lineinfile:
     destfile: /etc/kibana/kibana.yml
     regexp: 'server.host:'
     line: "server.host: {{ kibana_server_host }}"
 
+# - name: update kibana config file (point to elasticsearch host)
+# OR run on this node
+- include_role:
+    name: elasticsearch
+
+# run kibana behind nginx (safer)
+- include_role:
+    name: nginx
+
+# now configure nginx for kibana
+- name: setup nginx reverse proxy for kibana
+  template:
+    src: kibana.conf.j2
+    dest: /etc/nginx/conf.d/kibana.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart_nginx_service
+  register: nginx_needs_restart
+
+# Writes the create user script in the temp directory
+- name: create kibana admin user
+  template:
+    src: kibanaAdmin.j2
+    dest: /tmp/createUser
+    owner: root
+    group: root
+    mode: 0744
+
+# Runs the script to create Kibana admin user
+- name: create kibana admin user
+  expect:
+    command: bash /tmp/createUser
+    responses: 
+      'Password:' : "{{ kibana_password }}"
+
+
 - name: enable and run kibana
-  service: name=kibana state=started enabled=yes
+  service: name={{ item }} state=started enabled=yes
+  with_items:
+    - kibana
+    - nginx
+

@@ -1,0 +1,3 @@
+# group_vars for nginx group
+---
+group_vars: "nginx"
