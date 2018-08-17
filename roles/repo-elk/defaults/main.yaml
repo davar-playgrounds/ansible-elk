@@ -1,4 +1,6 @@
 # defaults file for elk stack
 
-elk_repo_path: /etc/yum.repos.d/elastic.repo
+elk_repo_cent_path: /etc/yum.repos.d/elastic.repo
+elk_repo_deb_path: /etc/apt/sources.list.d/elastic-6.x.list
+
 elk_key_url: https://artifacts.elastic.co/GPG-KEY-elasticsearch

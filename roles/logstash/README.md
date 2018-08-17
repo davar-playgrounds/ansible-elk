@@ -6,7 +6,9 @@ install logstash and configure with predefined templates
 Requirements
 ------------
 
-The role requires java be installed before logstash is started
+The role requires java be installed before logstash is installed and the Elastic repo is used to for the install.  The java and repo-elk roles are included in this role.
+
+Some of the code for this role comes from https://qbox.io/blog/deploying-elk-stack-ansible-elasticsearch-kibana-logstash
 
 
 Role Variables

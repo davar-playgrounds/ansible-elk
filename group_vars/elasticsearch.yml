@@ -1,5 +1,3 @@
 # group_vars for elasticsearch group
 ---
 group_vars: "elasticsearch"
-
-# elasticsearch_network_host: ""

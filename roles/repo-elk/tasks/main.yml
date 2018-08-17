@@ -1,29 +1,14 @@
----
-# tasks to setup elk's repo
+# main tasks for repo-elk role
 
-- name: checking if ELK repo is already configured...
-  stat: path={{ elk_repo_path }}
-  register: elk_repofile_result
-# - debug: var=elk_repofile_result
+# note: the following included tasks might configure and enable stuff in common_packages
+# requires 
+#   Debian_{tasks,services}.yml
+#   RedHat_{tasks,services}.yml
 
-# rpm_key and get_url fails if using proxies as ansible only works with http proxies
-# so copy the key file with curl and install it locally
-# also command gives warning for "creates", so use "shell" module
-- name: Install ELK repo
-  copy:
-    src: elastic.repo
-    dest: "{{ elk_repo_path }}"
-    owner: root
-    group: root
-    mode: 0644
-  when: not elk_repofile_result.stat.exists
-- name: get ELK key
-  shell: curl {{ elk_key_url }} -o GPG-KEY-elasticsearch
-  args:
-    warn: false
-    creates: GPG-KEY-elasticsearch
-  register: elk_key
-# - debug: var=elk_key
-- name: register ELK key
-  rpm_key: key=GPG-KEY-elasticsearch
-  when: not elk_key.failed
+# must use include because doesn't like dynamic content and won't look right path
+# this is ugly because import_task doesn't look in the right place until 2.7
+- include_tasks: roles/repo-elk/tasks/Debian_tasks.yml
+  when: ansible_os_family == "Debian"
+
+- include_tasks: roles/repo-elk/tasks/RedHat-tasks.yml
+  when: ansible_os_family == "RedHat"

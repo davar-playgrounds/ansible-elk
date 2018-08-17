@@ -48,5 +48,58 @@
   notify:
     - restart_logstash_service
 
+
+# Creating certs directories for SSL
+- name: Creates SSL directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - /etc/pki/tls/certs
+    - /etc/pki/tls/private
+
+
+# # Update SSL to restrict outside access
+# there's some debate on where this file is supposed to go
+# https://stackoverflow.com/questions/21477210/correct-location-of-openssl-cnf-file
+# Ubuntu = /etc/ssl/openssl.cnf
+# RHEL = /etc/pki/tls/openssl.cnf
+- name: Updating the config file to restrict outside access
+  lineinfile:
+    destfile: "{{ logstash_openssl_cnf }}"
+    regexp: 'subjectAltName ='
+    line: "subjectAltName = IP: {{ groups['logstash'] }}"
+    backup: yes
+
+# # Generate SSL certificates for Logstash
+# - name: Generate SSL certificates
+#  shell: "openssl req -config /etc/ssl/openssl.cnf -x509 -days 3650 -batch -nodes -newkey rsa:2048 -keyout /etc/pki/tls/private/logstash-forwarder.key -out /etc/pki/tls/certs/logstash-forwarder.crt"
+# # Configure Beats input configuration 02-beats-input.conf
+# - name: Configure Beats configuration file
+#  template:
+#    src: beats-input.conf.j2
+#    dest: /etc/logstash/conf.d/02-beats-input.conf
+#    owner: root
+#    group: root
+#    mode: 0644
+# # Configure Logstash 10-syslog-filter.conf config file
+# - name: Configure Syslog Filter
+#  template:
+#    src: syslog-filter.conf.j2
+#    dest: /etc/logstash/conf.d/10-syslog-filter.conf
+#    owner: root
+#    group: root
+#    mode: 0644
+# # Configure Elasticsearch output file 30-elasticsearch-output.conf
+# - name: Configure Elasticsearch output file
+#  template:
+#    src: elasticsearch-output.conf.j2
+#    dest: /etc/logstash/conf.d/30-elasticsearch-output.conf
+#    owner: root
+#    group: root
+#    mode: 0644
+
+
 - name: enable and run logstash
   service: name=logstash state=started enabled=yes
+

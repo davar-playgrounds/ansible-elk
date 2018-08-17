@@ -1,2 +1,20 @@
 # vars for all groups
 
+# place site-wide variables here (easier to change in one place)
+
+# elasticsearch_network_host: ""
+
+
+# kibana_server_host: ""
+
+nginx_kibana_port: 81
+# Nginx SSL listening port
+elk_server_ssl_cert_port: 8081
+# The web authentication credentials to gain access to Kibana
+kibana_user: admin1
+kibana_password: admin1
+# The system user that Nginx will use
+nginx_user: www-data
+
+
+# logstash_server_host: ""
