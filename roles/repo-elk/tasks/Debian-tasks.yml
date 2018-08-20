@@ -10,24 +10,30 @@
   register: elk_repofile_result
 # - debug: var=elk_repofile_result
 
-# us this to add separate repo instead of apt_repository
-# https://www.elastic.co/guide/en/elasticsearch/reference/current/deb.html
-- name: add ELK repo
-  copy:
-    dest: /etc/apt/sources.list.d/elastic-6.x.list
-    content: "deb https://artifacts.elastic.co/packages/6.x/apt stable main"
-    owner: root
-    group: root
-    mode: 0644
-  when: not elk_repofile_result.stat.exists
+# elastic.co's debian repo doesn't have a Release file and
+# installing a repo file for it breaks installations...email sent 8/17/18
+# disable this code until this is fixed
 
-# apt_key and get_url fails if using proxies as ansible only works with http proxies
-# so copy the key file with curl and install it locally
-# also, the debian version of this code doesn't seem to be reading the role defaults
-# also command gives warning for "creates", so use "shell" module
-- name: get ELK key
-  shell: wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add - 
-  args:
-    warn: false
-    creates: GPG-KEY-elasticsearch
-  register: elk_key
+# instead, install from URL and allow unauthenticated
+
+# # us this to add separate repo instead of apt_repository
+# # https://www.elastic.co/guide/en/elasticsearch/reference/current/deb.html
+# - name: add ELK repo
+#   copy:
+#     dest: /etc/apt/sources.list.d/elastic-6.x.list
+#     content: "deb https://artifacts.elastic.co/packages/6.x/apt stable main"
+#     owner: root
+#     group: root
+#     mode: 0644
+#   when: not elk_repofile_result.stat.exists
+
+# # apt_key and get_url fails if using proxies as ansible only works with http proxies
+# # so copy the key file with curl and install it locally
+# # also, the debian version of this code doesn't seem to be reading the role defaults
+# # also command gives warning for "creates", so use "shell" module
+# - name: get ELK key
+#   shell: wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add - 
+#   args:
+#     warn: false
+#     creates: GPG-KEY-elasticsearch
+#   register: elk_key
