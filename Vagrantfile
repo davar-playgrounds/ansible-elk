@@ -90,4 +90,20 @@ Vagrant.configure(2) do | config |
 		end
 	end
 
+	config.vm.define "logstash2" do | logstash2 |
+		logstash2.vm.box = 'geerlingguy/centos7'
+		logstash2.vm.network 'private_network', ip: '192.168.10.102'
+		logstash2.vm.hostname = 'logstash2'
+		logstash2.ssh.insert_key = false
+# 		logstash2.vm.provision "shell", inline: %q|
+# 			yum update -y
+#|
+		logstash2.vm.provision "ansible" do |ansible| 
+	        ansible.compatibility_mode = "2.0"
+	        ansible.inventory_path = "./inventory"
+	        ansible.playbook = "playbook-logstash.yml"
+	        # ansible.verbose = "v"
+	        # ansible.raw_arguments = [""]
+		end
+	end
 end

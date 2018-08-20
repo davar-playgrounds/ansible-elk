@@ -9,11 +9,11 @@
 # requires Java 8 + elk-repo first installed first
 # kludge to install on debian systems
 - include_tasks: roles/logstash/tasks/Debian-install.yml
-  when: ansible_os_family == "Debian"
+  when: ansible_os_family == 'Debian'
 
-- name: install logstash
+- name: install logstash RPM
   package: name=logstash state=present
-  when: ansible_os_family == "RedHat"
+  when: ansible_os_family == 'RedHat'
 
 - name: logstash config files
   copy: src={{ item.src }} dest=/etc/logstash/conf.d/
@@ -42,7 +42,7 @@
   blockinfile:
     path: /etc/logstash/logstash.yml
     backup: yes      
-    marker: "# -- {mark} ANSIBLE MANAGED BLOCK --"
+    marker: '# -- {mark} ANSIBLE MANAGED BLOCK --'
     content: |
       slowlog.threshold.warn: 2s
       slowlog.threshold.info: 1s
@@ -61,48 +61,62 @@
     - /etc/pki/tls/certs
     - /etc/pki/tls/private
 
-
-# # Update SSL to restrict outside access
+# Update SSL to restrict outside access
 # there's some debate on where this file is supposed to go
 # https://stackoverflow.com/questions/21477210/correct-location-of-openssl-cnf-file
 # Ubuntu = /etc/ssl/openssl.cnf
 # RHEL = /etc/pki/tls/openssl.cnf
-- name: Updating the config file to restrict outside access
-  lineinfile:
-    destfile: "{{ logstash_openssl_cnf }}"
-    regexp: 'subjectAltName ='
-    line: "subjectAltName = IP: {{ groups['logstash'] }}"
-    backup: yes
+# also, lineinfile won't accept a variable in the line argument, so use template
 
-# # Generate SSL certificates for Logstash
-# - name: Generate SSL certificates
-#  shell: "openssl req -config /etc/ssl/openssl.cnf -x509 -days 3650 -batch -nodes -newkey rsa:2048 -keyout /etc/pki/tls/private/logstash-forwarder.key -out /etc/pki/tls/certs/logstash-forwarder.crt"
-# # Configure Beats input configuration 02-beats-input.conf
-# - name: Configure Beats configuration file
-#  template:
-#    src: beats-input.conf.j2
-#    dest: /etc/logstash/conf.d/02-beats-input.conf
-#    owner: root
-#    group: root
-#    mode: 0644
-# # Configure Logstash 10-syslog-filter.conf config file
-# - name: Configure Syslog Filter
-#  template:
-#    src: syslog-filter.conf.j2
-#    dest: /etc/logstash/conf.d/10-syslog-filter.conf
-#    owner: root
-#    group: root
-#    mode: 0644
-# # Configure Elasticsearch output file 30-elasticsearch-output.conf
-# - name: Configure Elasticsearch output file
-#  template:
-#    src: elasticsearch-output.conf.j2
-#    dest: /etc/logstash/conf.d/30-elasticsearch-output.conf
-#    owner: root
-#    group: root
-#    mode: 0644
+# Generate SSL certificates for Logstash
+- name: Updating RHEL openssl file to restrict outside access
+  block:
+    - template: 
+        src: openssl-rpm.cnf.j2  
+        dest: /etc/pki/tls/openssl.cnf
+        owner: root
+        group: root
+        mode: 0644
+        backup: yes
+      register: openssl_file
+    - shell: grep 'subjectAltName=IP' /etc/pki/tls/openssl.cnf
+      when: not openssl_file.failed
+      register: grep_openssl
+    - debug: var=grep_openssl.stdout_lines
+    - shell: 'openssl req -config /etc/pki/tls/openssl.cnf -x509 -days 3650 -batch -nodes -newkey rsa:2048 -keyout /etc/pki/tls/private/logstash-forwarder.key -out /etc/pki/tls/certs/logstash-forwarder.crt'
+  when: ansible_os_family == 'RedHat'
+
+- name: Updating DEB openssl file to restrict outside access
+  block:
+    - template: 
+        src: openssl-deb.cnf.j2   
+        dest: /etc/ssl/openssl.cnf
+        owner: root
+        group: root
+        mode: 0644
+        backup: yes
+      register: openssl_file
+    - shell: grep 'subjectAltName=IP' /etc/ssl/openssl.cnf
+      when: not openssl_file.failed
+      register: grep_openssl
+    - debug: var=grep_openssl.stdout_lines
+    - shell: 'openssl req -config /etc/ssl/openssl.cnf -x509 -days 3650 -batch -nodes -newkey rsa:2048 -keyout /etc/pki/tls/private/logstash-forwarder.key -out /etc/pki/tls/certs/logstash-forwarder.crt'
+  when: ansible_os_family == 'Debian'
+
+- name: Configure beats, syslog, & elastic configuration files
+  template: 
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - { src: 'beats-input.conf.j2',          dest: '/etc/logstash/conf.d/40-beats-input.conf' }
+    - { src: '40-syslog.conf.j2',            dest: '/etc/logstash/conf.d/40-syslog-filter.conf' }
+    - { src: 'elasticsearch-output.conf.j2', dest: '/etc/logstash/conf.d/50-elasticsearch-output.conf' }
+  notify:
+    - restart_logstash_service
 
 
 - name: enable and run logstash
   service: name=logstash state=started enabled=yes
-
