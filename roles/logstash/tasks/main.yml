@@ -34,7 +34,14 @@
     - { src: '10-staas-telemetry.conf' }
     - { src: '10-staas-universe.conf' }
     - { src: '10-syslog.conf' }
-    - { src: '30-output' }
+    - { src: '20-staas-parsedate.conf' }
+    - { src: '20-tags.conf' }
+    - { src: '25-staas-hardware.conf' }
+    - { src: '25-staas-javaService.conf' }
+    - { src: '25-staas-swift.conf' }
+    - { src: '25-staas-telemetry.conf' }
+    - { src: '29-staas-cleanup.conf' }
+    - { src: '30-output.conf' }
   notify:
     - restart_logstash_service
 
