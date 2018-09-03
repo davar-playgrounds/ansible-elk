@@ -2,7 +2,8 @@
 
 This is a basic layout for an ansible project that can be expanded to support a site with a common set of utilities to be run on all hosts.  It can be tested using Vagrant.
 
-These roles are a home grown project as an alternative to elastic's own ansible role: https://github.com/elastic/ansible-elasticsearch
+These roles are a home grown project as an alternative to elastic's own ansible role: https://github.com/elastic/ansible-elasticsearch purely for
+my own learning
 
 ## How to use
 
@@ -18,27 +19,9 @@ To use these roles inside of ansible,
 ## Using Vagrant and Virtual Box for testing
 
 
-
-## Appendix A -- Building your own Vagrant box with Packer
-
-The following sites are very useful for building your own Vagrant boxes in Virtual
-
-- https://www.engineyard.com/blog/building-a-vagrant-box
-- https://www.skoblenick.com/vagrant/creating-a-custom-box-from-scratch
-
-And this git repo is good for creating packer templates:
-
-* https://github.com/mrlesmithjr/packer-templates.git
-
-## Appendix B -- OS and Versions Tested
+## OS and Versions Tested
 
 The following OS and versions have been tested:
 
 - CentOS 6 and 7
 - Debian 8 (jessie) and 9 (stretch)
-- Fedora 21, 24, 28*
-- Ubuntu 12.04 (precise) 14.04 (trusty), 16.04 (xenial), 17.04 (zesty), and 18.04 (bionic)
-
-
-
-*-- Fedora 28 is the Offical cloud release which lacks the Virtual Box Extensions, which is not required to use this ansible role
