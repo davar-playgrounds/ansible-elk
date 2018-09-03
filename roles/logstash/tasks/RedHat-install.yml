@@ -1,0 +1,31 @@
+# this is a kludge to install this old package on RedHat systems
+# so...this workaround 201808.17MeV
+
+- name: getting logstash rpm file (this may take a couple minutes)
+  shell: "wget https://download.elastic.co/logstash/logstash/packages/centos/logstash-2.4.0.noarch.rpm"
+  args:
+    warn: false # set warn=false to prevent warning
+    creates: logstash-2.4.0.noarch.rpm
+  register: logstash_wget_result
+# - debug: var=logstash_wget_result
+
+- name: installing rpm file
+  yum:
+    name: ./logstash-2.4.0.noarch.rpm
+    state: present
+    # allow_unauthenticated: True
+  when: not logstash_wget_result.failed
+  register: logstash_yum_apt
+# - debug: var=logstash_yum_apt.stdout_lines
+
+- name: enable Redhat /etc/sysconfig/logstash config file
+  lineinfile:
+    path: /etc/sysconfig/logstash
+    backup: yes
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: "^#LS_CONF_DIR=/etc/logstash/conf.d", line: "LS_CONF_DIR=/etc/logstash/conf.d" }
+    - { regexp: "^#LS_HEAP_SIZE=",                    line: 'LS_HEAP_SIZE="4g"' }
+  notify:
+    - restart_logstash_service

@@ -2,12 +2,13 @@
 
 This is a basic layout for an ansible project that can be expanded to support a site with a common set of utilities to be run on all hosts.  It can be tested using Vagrant.
 
+These roles are a home grown project as an alternative to elastic's own ansible role: https://github.com/elastic/ansible-elasticsearch
 
 ## How to use
 
-To use this role inside of ansible, 
+To use these roles inside of ansible, 
 
-* add the **common/** directory tree to your roles/ directory inside your ansible repository
+* add the **elasticsearch, java, kibana, logstash, nginx, repo-elk, and repo-epel** directory trees to your roles/ directory inside your ansible repository
 * edit your inventory file to use the common role for every host (or specific hosts)
 * to add packages, services, files, etc. to the common role:
   - modify variable *base_packages* in **roles/common/defaults/main.yml**

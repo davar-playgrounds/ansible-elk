@@ -11,8 +11,9 @@
 - include_tasks: roles/logstash/tasks/Debian-install.yml
   when: ansible_os_family == 'Debian'
 
-- name: install logstash RPM
-  package: name=logstash state=present
+# - name: install logstash RPM
+#   package: name=logstash-2.4.0 state=present
+- include_tasks: roles/logstash/tasks/RedHat-install.yml
   when: ansible_os_family == 'RedHat'
 
 - name: logstash config files
@@ -45,19 +46,30 @@
   notify:
     - restart_logstash_service
 
-- name: configure logstash.yml
-  blockinfile:
-    path: /etc/logstash/logstash.yml
-    backup: yes      
-    marker: '# -- {mark} ANSIBLE MANAGED BLOCK --'
-    content: |
-      slowlog.threshold.warn: 2s
-      slowlog.threshold.info: 1s
-      slowlog.threshold.debug: 500ms
-      slowlog.threshold.trace: 100ms
-  notify:
-    - restart_logstash_service
+- name: create patterns config directory
+  file:
+    path: /etc/logstash/patterns
+    state: directory
+    owner: 'root'
+    group: 'root'
+    mode: 755
 
+# NOTE: configuring the logstash 2.x conf.d directory and hash size
+# depends on the OS, so do this in the right file for RH or DEB
+
+# for logstash 5.x use this:
+# - name: configure logstash.yml
+#   blockinfile:
+#     path: /etc/logstash/logstash.yml
+#     backup: yes      
+#     marker: '# -- {mark} ANSIBLE MANAGED BLOCK --'
+#     content: |
+#       slowlog.threshold.warn: 2s
+#       slowlog.threshold.info: 1s
+#       slowlog.threshold.debug: 500ms
+#       slowlog.threshold.trace: 100ms
+#   notify:
+#     - restart_logstash_service
 
 # Creating certs directories for SSL
 - name: Creates SSL directories

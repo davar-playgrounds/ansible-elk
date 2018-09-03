@@ -10,7 +10,7 @@ Vagrant.configure(2) do | config |
 	# https://docs.vagrantup.com.
 
 	# config.vm.box = 'ubuntu1804'
-	config.vm.box = 'centos7'
+	config.vm.box = 'geerlingguy/centos6'
 	config.ssh.insert_key = false
 	# config.vm.network 'forwarded_port', guest: 80, host: 8080
 	if Vagrant.has_plugin?("vagrant-proxyconf")
@@ -91,7 +91,7 @@ Vagrant.configure(2) do | config |
 	end
 
 	config.vm.define "logstash2" do | logstash2 |
-		logstash2.vm.box = 'geerlingguy/centos7'
+		# logstash2.vm.box = 'geerlingguy/centos7'
 		logstash2.vm.network 'private_network', ip: '192.168.10.102'
 		logstash2.vm.hostname = 'logstash2'
 		logstash2.ssh.insert_key = false
