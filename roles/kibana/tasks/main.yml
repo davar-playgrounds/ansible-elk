@@ -9,13 +9,16 @@
 # requires Java 8 + elk-repo first installed first
 - name: install kibana (this may take a moment)
   package:
-    name: kibana
+    name: "{{ item }}"
     state: present
+  with_items:
+    - kibana
+    - python-pip
 
-# install pip and pexect for python (don't use package manager)
-- easy_install:
-    name: pip
-    state: latest
+#install pip and pexect for python (don't use package manager)
+#- easy_install:
+#    name: pip
+#    state: latest
 - pip: 
     name: "{{ item }}"
     state: latest
