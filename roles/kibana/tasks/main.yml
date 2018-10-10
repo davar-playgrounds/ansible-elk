@@ -15,10 +15,6 @@
     - kibana
     - python-pip
 
-#install pip and pexect for python (don't use package manager)
-#- easy_install:
-#    name: pip
-#    state: latest
 - pip: 
     name: "{{ item }}"
     state: latest
