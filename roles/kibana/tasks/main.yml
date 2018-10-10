@@ -7,7 +7,7 @@
     name: repo-elk
 
 # requires Java 8 + elk-repo first installed first
-- name: install kibana (this may take a moment)
+- name: install kibana (this may take several minutes)
   package:
     name: "{{ item }}"
     state: present
@@ -23,7 +23,7 @@
     - pexpect
 
 # default is to limit access to localhost connections only
-- name: updating kibana config file (limit to localhost)
+- name: updating kibana config file (limit to localhost's nginx')
   lineinfile:
     destfile: /etc/kibana/kibana.yml
     regexp: 'server.host:'
@@ -65,6 +65,7 @@
     command: bash /tmp/createUser
     responses: 
       'Password:' : "{{ kibana_password }}"
+      'Verifying - Password:' : "{{ kibana_password }}"
 
 
 - name: enable and run kibana
