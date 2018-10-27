@@ -21,7 +21,7 @@
   register: logstash_deb_apt
 # - debug: var=logstash_deb_apt
 
-- name: enable debian /etc/default/logstash config file
+- name: enable Debian /etc/default/logstash config file
   lineinfile:
     path: /etc/default/logstash
     backup: yes
