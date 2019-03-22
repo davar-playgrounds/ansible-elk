@@ -27,6 +27,7 @@ Vagrant.configure(2) do | config |
 	# provision on all machines -- set hosts and allow ssh w/o checking
 	# ius community repo has nginx
 	config.vm.provision "shell", inline: %q|
+		echo "providing hosts; disabling CheckHostIP"
 		cat /vagrant/etc-hosts >> /etc/hosts
 		sed -i.orig -e "s/#   CheckHostIP yes/CheckHostIP no/" /etc/ssh/ssh_config
 # 	    yum install -y https://centos7.iuscommunity.org/ius-release.rpm
@@ -35,20 +36,20 @@ Vagrant.configure(2) do | config |
 
 
 	config.vm.define "kibana1" do | kibana1 | 
-		kibana1.vm.network 'private_network', ip: '10.10.10.101'
+		kibana1.vm.network 'private_network', ip: '192.168.10.101'
 		kibana1.vm.hostname = 'kibana1'
 		kibana1.ssh.insert_key = false
 		kibana1.vm.provision "ansible" do |ansible| 
 	        ansible.compatibility_mode = "2.0"
 	        ansible.inventory_path = "./inventory"
 	        ansible.playbook = "playbook-kibana.yml"
-	        # ansible.verbose = "v"
+	        # ansible.verbose = "vvv"
 	        # ansible.raw_arguments = [""]
 		end
 	end
 
 	config.vm.define "elastic1" do | elastic1 |
-		elastic1.vm.network 'private_network', ip: '10.10.10.201'
+		elastic1.vm.network 'private_network', ip: '192.168.10.201'
 		elastic1.vm.hostname = 'elastic1'
 		elastic1.ssh.insert_key = false
 		elastic1.vm.provision "ansible" do |ansible| 
@@ -61,7 +62,7 @@ Vagrant.configure(2) do | config |
 	end
 
 	config.vm.define "elastic2" do | elastic2 |
-		elastic2.vm.network 'private_network', ip: '10.10.10.202'
+		elastic2.vm.network 'private_network', ip: '192.168.10.202'
 		elastic2.vm.hostname = 'elastic2'
 		elastic2.ssh.insert_key = false
 		elastic2.vm.provision "ansible" do |ansible| 
@@ -75,7 +76,7 @@ Vagrant.configure(2) do | config |
 
 	config.vm.define "logstash1" do | logstash1 |
 		logstash1.vm.box = 'geerlingguy/ubuntu1804'
-		logstash1.vm.network 'private_network', ip: '10.10.10.100'
+		logstash1.vm.network 'private_network', ip: '192.168.10.100'
 		logstash1.vm.hostname = 'logstash1'
 		logstash1.ssh.insert_key = false
 # 		logstash1.vm.provision "shell", inline: %q|
@@ -92,7 +93,7 @@ Vagrant.configure(2) do | config |
 
 	config.vm.define "logstash2" do | logstash2 |
 		# logstash2.vm.box = 'geerlingguy/centos7'
-		logstash2.vm.network 'private_network', ip: '10.10.10.102'
+		logstash2.vm.network 'private_network', ip: '192.168.10.102'
 		logstash2.vm.hostname = 'logstash2'
 		logstash2.ssh.insert_key = false
 # 		logstash2.vm.provision "shell", inline: %q|

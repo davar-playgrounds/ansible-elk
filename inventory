@@ -1,7 +1,7 @@
 # test inventory
 
 [kibana]
-kibana1 ansible_host=10.10.10.101
+kibana1 ansible_host=192.168.10.101
 
 [kibana:vars]
 # Variables for the kibana data visualizer configuration
@@ -9,8 +9,8 @@ httpd_port=80
 
 
 [elasticsearch]
-elastic1 ansible_host=10.10.10.201
-elastic2 ansible_host=10.10.10.202
+elastic1 ansible_host=192.168.10.201
+elastic2 ansible_host=192.168.10.202
 
 [elasticsearch:vars]
 # Variables for elastic search cluster configuration
@@ -18,8 +18,8 @@ elastic2 ansible_host=10.10.10.202
 
 
 [logstash]
-logstash1 ansible_host=10.10.10.100
-logstash2 ansible_host=10.10.10.102
+logstash1 ansible_host=192.168.10.100
+logstash2 ansible_host=192.168.10.102
 
 [logstash:vars]
 # Variables for the logstash
