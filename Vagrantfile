@@ -27,10 +27,11 @@ Vagrant.configure(2) do | config |
 	# provision on all machines -- set hosts and allow ssh w/o checking
 	# ius community repo has nginx
 	config.vm.provision "shell", inline: %q|
+		echo "providing hosts; disabling CheckHostIP"
 		cat /vagrant/etc-hosts >> /etc/hosts
 		sed -i.orig -e "s/#   CheckHostIP yes/CheckHostIP no/" /etc/ssh/ssh_config
-	    # yum install -y https://centos7.iuscommunity.org/ius-release.rpm
-	    # yum install -y python libselinux-python
+# 	    yum install -y https://centos7.iuscommunity.org/ius-release.rpm
+# 	    yum install -y python libselinux-python
 |
 
 
@@ -42,7 +43,7 @@ Vagrant.configure(2) do | config |
 	        ansible.compatibility_mode = "2.0"
 	        ansible.inventory_path = "./inventory"
 	        ansible.playbook = "playbook-kibana.yml"
-	        # ansible.verbose = "v"
+	        # ansible.verbose = "vvv"
 	        # ansible.raw_arguments = [""]
 		end
 	end
