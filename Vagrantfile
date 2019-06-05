@@ -75,7 +75,7 @@ Vagrant.configure(2) do | config |
 	end
 
 	config.vm.define "logstash1" do | logstash1 |
-		logstash1.vm.box = 'geerlingguy/ubuntu1804'
+		logstash1.vm.box = 'ubuntu/bionic64'
 		logstash1.vm.network 'private_network', ip: '192.168.10.100'
 		logstash1.vm.hostname = 'logstash1'
 		logstash1.ssh.insert_key = false
