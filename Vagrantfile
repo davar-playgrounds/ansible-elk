@@ -10,7 +10,7 @@ Vagrant.configure(2) do | config |
 	# https://docs.vagrantup.com.
 
 	# config.vm.box = 'ubuntu1804'
-	config.vm.box = 'centos/6'
+	config.vm.box = 'bento/centos-6'
 	config.ssh.insert_key = false
 	# config.vm.network 'forwarded_port', guest: 80, host: 8080
 	if Vagrant.has_plugin?("vagrant-proxyconf")
